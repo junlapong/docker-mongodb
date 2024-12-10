@@ -1,0 +1,29 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    container_name: mongodb
+    # platform: linux/amd64
+    env_file:
+      - ${PWD}/.env
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=${MONGODB_INITDB_ROOT_USERNAME:-root}
+      - MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_INITDB_ROOT_PASSWORD:-P@ssw0rd}
+      - MONGODB_INITDB_DATABASE=${MONGODB_INITDB_DATABASE:-mongo}
+      - MONGODB_INITDB_USERNAME=${MONGODB_INITDB_USERNAME:-user}
+      - MONGODB_INITDB_PASSWORD=${MONGODB_INITDB_PASSWORD:-pass}
+    ports:
+      - 27017:27017
+    volumes:
+      - ${PWD}/initdb.d/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
+      - mongodata:/data/db
+  # mongosh:
+  #   image: mongodb/mongodb-community-server:6.0-ubi8
+  #   container_name: mongosh
+  #   environment:
+  #     - CONN_STR=mongodb://user:pass@example
+  #   command: '/bin/bash -c "sleep 5; mongosh $$CONN_STR --eval \"show dbs;\""'
+  #   depends_on:
+  #     - mongodb
+
+volumes:
+  mongodata:
